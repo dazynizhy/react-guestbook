@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import Counter from './components/Counter'
+import GuestBookApp from './components/GuestBookApp'
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Counter />
-        
+      <div className="App">        
+        <GuestBookApp />
       </div>
     );
   }
