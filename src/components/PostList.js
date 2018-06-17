@@ -4,7 +4,7 @@ import PostListItem from './PostListItem'
 class PostList extends Component {
   render() {
     const PostListItems = this.props.posts.map((post) => {
-        return <PostListItem post={post} key={post.id}/>
+        return <PostListItem post={post} key={post._id}/>
     }) 
 
     return (

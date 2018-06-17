@@ -4,34 +4,18 @@ import NewPostFrom from "./NewPostFrom";
 import FilterablePostList from "./FilterablePostList";
 //import Filterinput from './Filterinput'
 
-const mockPost = [
-  {
-    id: 1,
-    title: "title 1",
-    content: "This is content 1"
-  },
-  {
-    id: 2,
-    title: "title 2",
-    content: "This is content 2"
-  },
-  {
-    id: 3,
-    title: "title 3",
-    content: "This is content 3"
-  }
-];
+
 
 class GuestBookApp extends Component {
   state = {
-    posts: mockPost,
+    posts: [],
     filterText: ""
   };
 
   handleOnCreatePost = ({ title, content }) => {
-    const id = "" + Math.random();
+    const _id = "" + Math.random();
     const post = {
-      id,
+      _id,
       title,
       content
     };
@@ -49,9 +33,15 @@ class GuestBookApp extends Component {
   };
 
   //API
-  // componentDidMount() {
-  //   fetch().then()
-  // }
+  componentDidMount() {
+    fetch('http://localhost:3000/posts')
+    .then(res => res.json())
+    .then(json => {
+      this.setState({
+        posts: json
+      })
+    })
+  }
 
   render() {
 
