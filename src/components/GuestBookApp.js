@@ -9,7 +9,8 @@ import FilterablePostList from "./FilterablePostList";
 class GuestBookApp extends Component {
   state = {
     posts: [],
-    filterText: ""
+    filterText: "",
+    loading : false
   };
 
   handleOnCreatePost = ({ title, content }) => {
@@ -34,11 +35,16 @@ class GuestBookApp extends Component {
 
   //API
   componentDidMount() {
+    this.setState({
+      loading: true
+    })
     fetch('http://localhost:3000/posts')
     .then(res => res.json())
     .then(json => {
       this.setState({
-        posts: json
+        posts: json,
+        loading: false
+
       })
     })
   }
@@ -57,7 +63,7 @@ class GuestBookApp extends Component {
           value={this.state.filterText}
           onChange={this.handleFilterInputChange}
         />
-
+        {this.state.loading ? <h2>loading .....</h2> : null}
         <FilterablePostList posts={this.state.posts} filterText={this.state.filterText}/>
       </React.Fragment>
     );

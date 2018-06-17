@@ -1,15 +1,37 @@
 import React, { Component } from 'react';
 import GuestBookApp from './components/GuestBookApp'
-import './App.css';
+import styled ,{ injectGlobal } from 'styled-components'
+//import './App.css';
+
+injectGlobal`
+body {
+  background: blue;
+}
+`
+
+const Container = styled.div`
+  width: 640px;
+  margin: 0 auto;
+  background : ${(props) => props.background}
+`
+Container.defaultProps = {
+  background: 'yellow'
+}
+// const RedContainer = styled(Container)`
+// backgroundColor :red;
+// `
+
 
 class App extends Component {
   render() {
     return (
-      <div className="App">        
+      <Container className="App" background="red">        
         <GuestBookApp />
-      </div>
+      </Container>
     );
   }
 }
+
+
 
 export default App;
