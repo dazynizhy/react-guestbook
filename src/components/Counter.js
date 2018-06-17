@@ -3,6 +3,8 @@ import CounterControl from './CounterControl'
 import MultiplyDisplay from './MultiplyDisplay'
 import PowerDisplay from './PowerDisplay'
 
+import Lifecycle from './Lifecycle'
+
 class Counter extends React.Component {
 
     // constructor(props) {
@@ -61,6 +63,9 @@ class Counter extends React.Component {
             onMinus = {this.onMinusPower}
             onReset = {this.onResetPower}
             />
+
+            
+            <Lifecycle number={this.state.counter} />
         </React.Fragment>
         )
     }
