@@ -17,9 +17,6 @@ const Container = styled.div`
 Container.defaultProps = {
   background: 'yellow'
 }
-// const RedContainer = styled(Container)`
-// backgroundColor :red;
-// `
 
 
 class App extends Component {

@@ -3,12 +3,13 @@ import React, { Component } from "react";
 import NewPostFrom from "./NewPostFrom";
 import FilterablePostList from "./FilterablePostList";
 //import Filterinput from './Filterinput'
+import { connect } from 'react-redux'
 
 
 
 class GuestBookApp extends Component {
   state = {
-    posts: [],
+    //posts: [],
     filterText: "",
     loading : false
   };
@@ -20,10 +21,12 @@ class GuestBookApp extends Component {
       title,
       content
     };
-    const newPosts = this.state.posts.concat(post); //concat return array
-    this.setState({
-      posts: newPosts
-    });
+
+    this.props.onCreatePost(post)
+    // const newPosts = this.state.posts.concat(post); //concat return array
+    // this.setState({
+    //   posts: newPosts
+    // });
     //console.log(newPosts)
   };
 
@@ -35,18 +38,19 @@ class GuestBookApp extends Component {
 
   //API
   componentDidMount() {
-    this.setState({
-      loading: true
-    })
-    fetch('http://localhost:3000/posts')
-    .then(res => res.json())
-    .then(json => {
-      this.setState({
-        posts: json,
-        loading: false
+    console.log(this.props)
+    // this.setState({
+    //   loading: true
+    // })
+    // fetch('http://localhost:3000/posts')
+    // .then(res => res.json())
+    // .then(json => {
+    //   this.setState({
+    //     posts: json,
+    //     loading: false
 
-      })
-    })
+    //   })
+    // })
   }
 
   render() {
@@ -64,10 +68,21 @@ class GuestBookApp extends Component {
           onChange={this.handleFilterInputChange}
         />
         {this.state.loading ? <h2>loading .....</h2> : null}
-        <FilterablePostList posts={this.state.posts} filterText={this.state.filterText}/>
+        <FilterablePostList posts={this.props.posts} filterText={this.state.filterText}/>
       </React.Fragment>
     );
   }
 }
 
-export default GuestBookApp;
+function mapStateToProps(state) {
+  return { posts: state.posts }
+}
+
+function mapDispatchToProps(dispatch) {
+  return { onCreatePost: (post) => {
+      dispatch({type: 'CREATE_POST', ...post})
+    } 
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(GuestBookApp);
