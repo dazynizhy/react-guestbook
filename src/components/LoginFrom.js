@@ -3,7 +3,15 @@ import { ButtonToolbar,Button,FormControl,FormGroup,FieldGroup,ControlLabel } fr
 import { connect }  from 'react-redux'
 import { loginSuccess,logout } from '../actions/auth'
 import { withRouter } from 'react-router'
+import { Mutation , graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
+
+const loginMutation = gql`
+    mutation login($username: String!,$pass: String!){
+        token : login(username: $username , password:$pass )
+    }
+`
 
 class LoginFrom extends Component {
     state ={
@@ -65,43 +73,60 @@ class LoginFrom extends Component {
         }
 
         return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                <FormGroup
-                    controlId="formBasicText"
-                    validationState=""
-                >
-                    <ControlLabel>username</ControlLabel>
-                    <FormControl
-                        type="text"
-                        value={this.state.username}
-                        placeholder="username"
-                        onChange={this.onUsernameInputChange}
-                    />
-                    <ControlLabel>password</ControlLabel>
-                    <FormControl
-                        type="password"
-                        value={this.state.password}
-                        placeholder="password"
-                        onChange={this.onPasswordInputChange}
-                    />
-                </FormGroup>
-                    {/* <input 
-                        type="text" 
-                        placeholder="username"
-                        value={this.state.username}           
-                        onChange={this.onUsernameInputChange} 
-                    /> 
-                    <input 
-                        type="password"  
-                        value={this.state.password}           
-                        onChange={this.onPasswordInputChange}
-                    /> */}
-                    <ButtonToolbar>
-                        <Button bsStyle="primary" bsSize="large" type="submit">Login</Button>
-                    </ButtonToolbar>
-                </form>
-            </div>
+            <Mutation mutation={loginMutation}>
+            {(mutateFn , result) => {
+                return(
+                    <div>
+                    <form onSubmit={async (e) => {
+                        e.preventDefault()
+                        const result = await mutateFn({
+                            variables: {
+                                username: this.state.username,
+                                pass: this.state.password
+                            }
+                        })
+                        console.log(result)
+                        this.props.onLoginSuccess(result.data.token)
+                    }}>
+                    <FormGroup
+                        controlId="formBasicText"
+                        validationState=""
+                    >
+                        <ControlLabel>username</ControlLabel>
+                        <FormControl
+                            type="text"
+                            value={this.state.username}
+                            placeholder="username"
+                            onChange={this.onUsernameInputChange}
+                        />
+                        <ControlLabel>password</ControlLabel>
+                        <FormControl
+                            type="password"
+                            value={this.state.password}
+                            placeholder="password"
+                            onChange={this.onPasswordInputChange}
+                        />
+                    </FormGroup>
+                        {/* <input 
+                            type="text" 
+                            placeholder="username"
+                            value={this.state.username}           
+                            onChange={this.onUsernameInputChange} 
+                        /> 
+                        <input 
+                            type="password"  
+                            value={this.state.password}           
+                            onChange={this.onPasswordInputChange}
+                        /> */}
+                        <ButtonToolbar>
+                            <Button bsStyle="primary" bsSize="large" type="submit">Login</Button>
+                        </ButtonToolbar>
+                    </form>
+                </div>
+                )
+            }}
+            </Mutation>
+           
         )
     }
 }
