@@ -5,15 +5,17 @@ import App from './App';
 // import registerServiceWorker from './registerServiceWorker';
 
 ///////  REDUX ///////////////////
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware , compose } from 'redux'
 import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
 
 const store = createStore(
     reducer,
-    applyMiddleware(thunk)
-    //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    compose(
+        applyMiddleware(thunk),
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
 )
 
 // store.subscribe(() => {

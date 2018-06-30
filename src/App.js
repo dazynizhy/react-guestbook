@@ -22,7 +22,7 @@ Container.defaultProps = {
 class App extends Component {
   render() {
     return (
-      <Container className="App" background="red">        
+      <Container className="App" background="gray">        
         <GuestBookApp />
       </Container>
     );

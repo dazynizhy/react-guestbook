@@ -2,6 +2,7 @@ import React, { Component } from "react";
 //import PostList from "./PostList";
 import NewPostFrom from "./NewPostFrom";
 import FilterablePostList from "./FilterablePostList";
+import LoginFrom from "./LoginFrom"
 //import Filterinput from './Filterinput'
 import { connect } from 'react-redux'
 import { createPost, receivePost , fetchPosts} from '../actions/post'
@@ -53,6 +54,7 @@ class GuestBookApp extends Component {
 
     return (
       <React.Fragment>
+        <LoginFrom />
         <h1>My GUEST BOOK</h1>
         <NewPostFrom onCreatePost={this.handleOnCreatePost} />
         <input
