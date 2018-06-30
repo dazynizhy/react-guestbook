@@ -14,16 +14,13 @@ const postsQuery = gql`
         name
         }
         content
-        author {
-        id
-        username
-        }
+       
     }
     }
 `
 const createPostMutation = gql`
     mutation createPost($postData: PostData! ){
-        createPost(data:$postData){
+       post: createPost(data:$postData){
         id
         title
         content
@@ -59,23 +56,40 @@ class GuestBookApollo extends React.Component {
         }
         return (
             <React.Fragment>  
-            <Mutation mutation={createPostMutation}>     
-            {(createPostMutate) => {
-                return (
-                    <NewPostFrom
-                     onCreatePost={({title, content}) => {
-                        const postData = {
-                            title,
-                            content
-                        }
-                        const variables = { postData }
-                        createPostMutate({
-                            variables
-                        })
-                     }} 
-                    /> 
-                )
+            <Mutation 
+            mutation={createPostMutation} 
+            update={(cache,result) => {
+                const {posts} = cache.readQuery({  query : postsQuery});
+                const newPosts = [...posts , result.data.post ]
+                cache.writeQuery({
+                    query: postsQuery,
+                    data: {posts: newPosts }
+                })
             }}
+
+            // ต้องไป qeury มาอีกรอบนึง ไม่ค่อยดี
+            // refetchQueries={[
+            //    {
+            //     query :postsQuery
+            //    } 
+            // ]}
+            >     
+                {(createPostMutate) => {
+                    return (
+                        <NewPostFrom
+                        onCreatePost={({title, content}) => {
+                            const postData = {
+                                title,
+                                content
+                            }
+                            const variables = { postData }
+                            createPostMutate({
+                                variables
+                            })
+                        }} 
+                        /> 
+                    )
+                }}
             </Mutation>   
             <PostList posts={this.props.posts} />
             </React.Fragment>
