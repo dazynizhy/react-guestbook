@@ -13,7 +13,11 @@ export function loginSuccess(token) {
 }
 
 export function logout() {
-    return {
-        type: 'LOGOUT'
+    return (dispatch) => {
+        const cookies = new Cookies();
+        cookies.remove('token')
+        dispatch({
+            type: 'LOGOUT'
+        })
     }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonToolbar,Button,FormControl,FormGroup,FieldGroup,ControlLabel } from 'react-bootstrap';
 import { connect }  from 'react-redux'
-import { loginSuccess } from '../actions/auth'
+import { loginSuccess,logout } from '../actions/auth'
 
 
 class LoginFrom extends Component {
@@ -53,7 +53,14 @@ class LoginFrom extends Component {
 
     render (){
         if(this.props.isLoggedIn){
-            return <p>Logged in</p>
+            return (
+                <div>
+                    <p>Logged in</p>
+                    <ButtonToolbar>
+                        <Button bsStyle="danger" bsSize="large" onClick={this.props.onLogout} >Logout</Button>
+                    </ButtonToolbar>
+                </div>
+            ) 
         }
 
         return (
@@ -111,6 +118,9 @@ function mapDispatchToProps(dispatch) {
     return {
         onLoginSuccess: (token) =>{
             dispatch(loginSuccess(token))
+        },
+        onLogout: () => {
+            dispatch(logout())
         }
     }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'
+import Cookies from 'universal-cookie'
 import './index.css';
 import App from './App';
 // import registerServiceWorker from './registerServiceWorker';
@@ -10,8 +11,14 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
 
+
+
+const cookies = new Cookies()
+const token = cookies.get('token') 
+
 const store = createStore(
     reducer,
+    {auth : { token }},
     compose(
         applyMiddleware(thunk),
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
