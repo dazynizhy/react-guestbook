@@ -54,7 +54,7 @@ class GuestBookApp extends Component {
 
     return (
       <React.Fragment>
-        <LoginFrom />
+        {/* <LoginFrom /> */}
         <h1>My GUEST BOOK</h1>
         <NewPostFrom onCreatePost={this.handleOnCreatePost} />
         <input

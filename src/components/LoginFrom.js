@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ButtonToolbar,Button,FormControl,FormGroup,FieldGroup,ControlLabel } from 'react-bootstrap';
 import { connect }  from 'react-redux'
 import { loginSuccess,logout } from '../actions/auth'
+import { withRouter } from 'react-router'
 
 
 class LoginFrom extends Component {
@@ -105,8 +106,9 @@ class LoginFrom extends Component {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state) {//,ownProps โยน props จากแม่ไปให้ลูกได้โดยไม่หายกลางทาง แก้ปัญหาการอม props
     return {
+        //...ownProps,
         isLoggedIn:  state.auth.token != null //standard
         //isLoggedIn: typeof state.auth.token !== 'undefined'  //string type of   
         //change to array check
@@ -114,10 +116,12 @@ function mapStateToProps(state) {
     }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch ,ownProps) {
+    console.log(ownProps)
     return {
         onLoginSuccess: (token) =>{
             dispatch(loginSuccess(token))
+            ownProps.history.replace('/')
         },
         onLogout: () => {
             dispatch(logout())
@@ -126,4 +130,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(LoginFrom)
+export default withRouter(connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LoginFrom))
