@@ -4,7 +4,7 @@ import NewPostFrom from "./NewPostFrom";
 import FilterablePostList from "./FilterablePostList";
 //import Filterinput from './Filterinput'
 import { connect } from 'react-redux'
-
+import { createPost, receivePost , fetchPosts} from '../actions/post'
 
 
 class GuestBookApp extends Component {
@@ -15,14 +15,14 @@ class GuestBookApp extends Component {
   };
 
   handleOnCreatePost = ({ title, content }) => {
-    const _id = "" + Math.random();
-    const post = {
-      _id,
-      title,
-      content
-    };
+    // const _id = "" + Math.random();
+    // const post = {
+    //   _id,
+    //   title,
+    //   content
+    // };
 
-    this.props.onCreatePost(post)
+    this.props.onCreatePost(title,content)
     // const newPosts = this.state.posts.concat(post); //concat return array
     // this.setState({
     //   posts: newPosts
@@ -39,18 +39,10 @@ class GuestBookApp extends Component {
   //API
   componentDidMount() {
     console.log(this.props)
-    // this.setState({
-    //   loading: true
-    // })
-    // fetch('http://localhost:3000/posts')
-    // .then(res => res.json())
-    // .then(json => {
-    //   this.setState({
-    //     posts: json,
-    //     loading: false
-
-    //   })
-    // })
+    this.setState({
+      loading: true
+    })    
+    this.props.fetchPosts()
   }
 
   render() {
@@ -67,21 +59,33 @@ class GuestBookApp extends Component {
           value={this.state.filterText}
           onChange={this.handleFilterInputChange}
         />
-        {this.state.loading ? <h2>loading .....</h2> : null}
-        <FilterablePostList posts={this.props.posts} filterText={this.state.filterText}/>
+        {/* {this.state.loading ? <h2>loading .....</h2> : null} */}
+        <FilterablePostList 
+          posts={this.props.posts} 
+          filterText={this.state.filterText}
+        />
       </React.Fragment>
     );
   }
 }
+
 
 function mapStateToProps(state) {
   return { posts: state.posts }
 }
 
 function mapDispatchToProps(dispatch) {
-  return { onCreatePost: (post) => {
-      dispatch({type: 'CREATE_POST', ...post})
-    } 
+  return { 
+    onCreatePost: (title,content) => {
+      dispatch(createPost(title,content))
+      //dispatch({type: 'CREATE_POST', ...post})
+    },
+    fetchPosts: () =>{
+      dispatch(fetchPosts())
+    }
+    // onPostReceived: (posts) => {
+    //   dispatch(receivePost(posts))
+    // } 
   }
 }
 

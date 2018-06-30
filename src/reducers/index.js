@@ -14,7 +14,9 @@ function postReducer( state = [] , action) {
     switch(action.type) {
         case 'CREATE_POST':
             return [...state, {title: action.title , content: action.content}]
-        default:
+        case 'RECEIVE_POST':
+            return [...state, ...action.posts ]
+            default:
             return state
     }
 }
