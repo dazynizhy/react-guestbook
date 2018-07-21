@@ -1,30 +1,33 @@
 import createApolloClient from './createApolloClient'
-import createReduxStore from './createReduxStore'
 import Head from 'next/head'
 import { getDataFromTree } from 'react-apollo'
 import Cookies from 'universal-cookie'
+import createReduxStore from './createReduxStore'
 
 export default (App) => {
   return class Apollo extends React.Component {
     static displayName = 'withApollo(App)'
-    static async getInitialProps ( {Component, router ,ctx  }) {
-      //const { Component, router } = ctx
-      
 
+
+    static async getInitialProps ({Component, router, ctx}) {
+     // const {Component, router, ctx}= ctx
       let appProps = {}
       if (App.getInitialProps) {
-        appProps = await App.getInitialProps({Component, router ,ctx  })
+        appProps = await App.getInitialProps({Component, router, ctx})
       }
+      //create redux store
+      //universal cookie use diffrent between browser / server
+      //1. Get Token from cookie
+      const cookie = new Cookies(ctx.req ? ctx.req.headers.cookie: undefined)
+      const token = cookie.get('token')
 
-      //1
-      const cookies = new Cookies(ctx.req ? ctx.req.headers.cookie : undefined)
-      const token = cookies.get('token')
-
-      const initialState = { auth: { token } }
+      //2. initialState for redux store
+      const initialState = {auth: {token}}
       const store = createReduxStore(initialState)
 
       // Run all GraphQL queries in the component tree
       // and extract the resulting data
+      //3. create apollo store
       const apollo = createApolloClient(store)
       if (!process.browser) {
         try {
@@ -64,11 +67,12 @@ export default (App) => {
     constructor (props) {
       super(props)
       this.reduxStore = createReduxStore(props.reduxState)
-      this.apolloClient = createApolloClient(undefined, props.apolloState)
+      this.apolloClient = createApolloClient(this.reduxStore, props.apolloState)
     }
 
     render () {
       return <App {...this.props} apolloClient={this.apolloClient} reduxStore={this.reduxStore} />
     }
+
   }
 }
