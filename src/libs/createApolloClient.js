@@ -1,6 +1,35 @@
 import { HttpLink, ApolloClient, InMemoryCache} from 'apollo-boost'
 import { setContext } from 'apollo-link-context';
 
+// sub
+import { split } from 'apollo-link';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+
+
+function applyWsLink(httpLink) {
+    const wsLink = new WebSocketLink({
+        uri: `ws://localhost:3000/subscriptions`,
+        options: {
+          reconnect: true
+        }
+    });
+
+    // using the ability to split links, you can send data to each link
+    // depending on what kind of operation is being sent
+    const link = split(
+        // split based on operation type
+        ({ query }) => {
+        const { kind, operation } = getMainDefinition(query);
+        return kind === 'OperationDefinition' && operation === 'subscription';
+        },
+        wsLink,
+        httpLink,
+    );
+
+    return link
+}
+
 function createApolloClient(store) {
 
     const httpLink = new HttpLink({
@@ -22,8 +51,10 @@ function createApolloClient(store) {
         }
     });
 
+    const link = applyWsLink(authLink.concat(httpLink))
+
     const client = new ApolloClient({
-       link: authLink.concat(httpLink),
+       link: link,//authLink.concat(httpLink),
        cache: new InMemoryCache()
     })
     return client

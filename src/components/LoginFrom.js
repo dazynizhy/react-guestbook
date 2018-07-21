@@ -85,6 +85,11 @@ class LoginFrom extends Component {
                                 pass: this.state.password
                             }
                         })
+
+                        if(!result.data.token){
+                            return alert('Login Failed')
+                        }
+
                         console.log(result)
                         this.props.onLoginSuccess(result.data.token)
                     }}>
