@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ButtonToolbar,Button,FormControl,FormGroup,FieldGroup,ControlLabel } from 'react-bootstrap';
 import { connect }  from 'react-redux'
 import { loginSuccess,logout } from '../actions/auth'
-import { withRouter } from 'react-router'
+import { withRouter } from 'next/router'
 import { Mutation , graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -151,7 +151,8 @@ function mapDispatchToProps(dispatch ,ownProps) {
     return {
         onLoginSuccess: (token) =>{
             dispatch(loginSuccess(token))
-            ownProps.history.replace('/')
+            //ownProps.history.replace('/')
+            ownProps.router.replace('/')
         },
         onLogout: () => {
             dispatch(logout())

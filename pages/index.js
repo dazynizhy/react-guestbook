@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import GuestBookApollo from '../components/GuestBookApollo'
 
 class Index extends React.Component {
 
@@ -11,9 +12,7 @@ class Index extends React.Component {
     
     render() {
         return (
-            <>
-            <h1>Index { this.props.name }</h1>
-            </>
+            <GuestBookApollo />
         )
     }
 }

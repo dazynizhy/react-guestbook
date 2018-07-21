@@ -1,3 +1,4 @@
+import 'isomorphic-unfetch';
 import { HttpLink, ApolloClient, InMemoryCache} from 'apollo-boost'
 import { setContext } from 'apollo-link-context';
 
@@ -8,6 +9,11 @@ import { getMainDefinition } from 'apollo-utilities';
 
 
 function applyWsLink(httpLink) {
+
+    if(!process.browser) {
+        return httpLink
+    }
+
     const wsLink = new WebSocketLink({
         uri: `ws://localhost:3000/subscriptions`,
         options: {
@@ -30,14 +36,16 @@ function applyWsLink(httpLink) {
     return link
 }
 
-function createApolloClient(store) {
+function createApolloClient(store , innitialstate = {} ) {
 
     const httpLink = new HttpLink({
         uri: 'http://localhost:3000/graphql'
     })
 
     const authLink = setContext((_, { headers }) => {
-        
+        if(!store) {
+            return { headers }
+        }
         const state = store.getState()
         const token = state.auth.token
         // if(!token) {
@@ -55,7 +63,7 @@ function createApolloClient(store) {
 
     const client = new ApolloClient({
        link: link,//authLink.concat(httpLink),
-       cache: new InMemoryCache()
+       cache: new InMemoryCache().restore(innitialstate)
     })
     return client
 }
